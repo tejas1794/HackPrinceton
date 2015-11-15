@@ -16,29 +16,31 @@ function onAnchorClick(event) {
 // browser action popup.
 function buildPopupDom(divName, data) {
   var popupDiv = document.getElementById(divName);
-
+  var totalSecured = 0;
+  var totalUnsecured = 0;
   var ul = document.createElement('ul');
   popupDiv.appendChild(ul);
-
   for (var i = 0, ie = data.length; i < ie; ++i) {
     var a = document.createElement('a');
     a.href = data[i];
     a.appendChild(document.createTextNode(data[i]));
-    a.addEventListener('click', onAnchorClick);
-
-    var li = document.createElement('li');
-    li.appendChild(a);
-
-    ul.appendChild(li);
+	//if (data[i].search('https')){totalSecured++;}
+	a=totalSecured+1;
+    //a.addEventListener('click', onAnchorClick);
   }
+  var li = document.createElement('li');
+  li.appendChild(a);
+  ul.appendChild(li);
+  //var li = document.createElement('li');
+  //li.appendChild(totalUnsecured);
+  //ul.appendChild(li)
 }
 
 // Search history to find up to ten links that a user has typed in,
 // and show those links in a popup.
 function buildTypedUrlList(divName) {
-  // To look for history items visited in the last week,
-  // subtract a week of microseconds from the current time.
-  var microsecondsPerWeek = 1000 * 60 * 60 * 24 * 7;
+  //Looking at up to 1 year old history items.
+  var microsecondsPerWeek = 1000 * 60 * 60 * 24 * 30;
   var oneWeekAgo = (new Date).getTime() - microsecondsPerWeek;
 
   // Track the number of callbacks from chrome.history.getVisits()
@@ -110,7 +112,7 @@ function buildTypedUrlList(divName) {
       return urlToCount[b] - urlToCount[a];
     });
 
-    buildPopupDom(divName, urlArray.slice(0, 10));
+    buildPopupDom(divName, urlArray.slice(0,10));
   };
 }
 
